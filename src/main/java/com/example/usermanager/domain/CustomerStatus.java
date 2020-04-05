@@ -1,5 +1,5 @@
 package com.example.usermanager.domain;
 
-public enum CustomerStatusEnum {
+public enum CustomerStatus {
     Active, Block, NonActive
 }

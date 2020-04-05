@@ -10,4 +10,5 @@ import java.math.BigInteger;
 public interface CustomerRepository extends MongoRepository<Customer, BigInteger> {
 
     Customer findByLogin(String login);
+    Customer findByCustomerId(BigInteger customerId);
 }

@@ -1,6 +1,9 @@
 package com.example.usermanager.security.provider;
 
+import com.example.usermanager.security.filter.JwtAuthenticationFilter;
 import com.example.usermanager.service.CustomerServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +17,7 @@ import java.util.Collections;
 public class CustomerAuthenticationProvider implements AuthenticationProvider {
 
 
+    private static final Logger log = LoggerFactory.getLogger(CustomerAuthenticationProvider.class);
     private final CustomerServiceImpl customerServiceImpl;
 
     public CustomerAuthenticationProvider(CustomerServiceImpl customerServiceImpl) {
@@ -24,6 +28,8 @@ public class CustomerAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         var name = authentication.getPrincipal().toString();
         var password = authentication.getCredentials().toString();
+
+        log.info("Attempt authentication via username/password for " + name);
 
         if (!customerServiceImpl.isAuthenticated(name, password)) {
             throw new AuthenticationServiceException("Authentication failed");

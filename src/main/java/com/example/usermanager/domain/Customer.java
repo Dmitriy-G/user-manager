@@ -30,7 +30,7 @@ public class Customer {
     private String password;
 
     @NonNull
-    private CustomerStatusEnum status;
+    private CustomerStatus status;
 
     @Indexed(unique=true)
     @NonNull
@@ -41,7 +41,7 @@ public class Customer {
     }
 
     @PersistenceConstructor
-    public Customer(String login, String password, CustomerStatusEnum status, String email) {
+    public Customer(String login, String password, CustomerStatus status, String email) {
         this.login = login;
         this.password = password;
         this.status = status;
@@ -68,11 +68,11 @@ public class Customer {
         this.password = password;
     }
 
-    public CustomerStatusEnum getStatus() {
+    public CustomerStatus getStatus() {
         return status;
     }
 
-    public void setStatus(CustomerStatusEnum status) {
+    public void setStatus(CustomerStatus status) {
         this.status = status;
     }
 
