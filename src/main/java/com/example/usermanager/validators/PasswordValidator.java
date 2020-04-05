@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class PasswordValidator implements ConstraintValidator<Password, String> {
 
     private Password annotation;
-    private static final Pattern pattern = Pattern.compile("");
+    private static final Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[A-z])(?=.*[!?@#$%^&+=]).*$");
 
     @Override
     public void initialize(Password annotation) {

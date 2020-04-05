@@ -19,7 +19,7 @@ import java.util.List;
 public class SpringFoxConfig {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String DEFAULT_INCLUDE_PATTERN = "/api/.*";
+    static final String DEFAULT_INCLUDE_PATTERN = "/api/.*";
 
 
     private ApiKey apiKey() {
@@ -27,9 +27,9 @@ public class SpringFoxConfig {
     }
 
     private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope
+        var authorizationScope
                 = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        var authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Lists.newArrayList(
                 new SecurityReference("JWT", authorizationScopes));
@@ -44,14 +44,14 @@ public class SpringFoxConfig {
 
     @Bean
     public Docket api() {
-        Contact contact = new Contact(
+        var contact = new Contact(
                 "Dmitriy",
                 "https://example.com",
                 "example@example.com");
 
-        List<VendorExtension> vendors = new ArrayList<>();
+        var vendors = new ArrayList<VendorExtension>();
 
-        ApiInfo apiInfo = new ApiInfo(
+        var apiInfo = new ApiInfo(
                 "Customer API",
                 "API for manage of customers",
                 "0.0.1",

@@ -27,7 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
    public boolean isAuthenticated(String login, String password){
-       Customer customer = customerRepository.findByLogin(login);
+       var customer = customerRepository.findByLogin(login);
        return !Objects.isNull(customer) && customer.getStatus() == CustomerStatusEnum.Active && passwordEncoder.matches(password, customer.getPassword());
    }
 

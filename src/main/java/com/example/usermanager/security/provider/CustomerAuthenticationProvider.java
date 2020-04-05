@@ -22,8 +22,8 @@ public class CustomerAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String name = authentication.getPrincipal().toString();
-        String password = authentication.getCredentials().toString();
+        var name = authentication.getPrincipal().toString();
+        var password = authentication.getCredentials().toString();
 
         if (!customerServiceImpl.isAuthenticated(name, password)) {
             throw new AuthenticationServiceException("Authentication failed");

@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class LoginValidator implements ConstraintValidator<Login, String> {
 
     private Login annotation;
-    private static final Pattern pattern = Pattern.compile("");
+    private static final Pattern pattern = Pattern.compile("^[A-z0-9_.-]*$");
 
     @Override
     public void initialize(Login annotation) {
