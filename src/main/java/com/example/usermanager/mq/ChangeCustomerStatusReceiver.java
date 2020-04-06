@@ -1,8 +1,7 @@
 package com.example.usermanager.mq;
 
 import com.example.usermanager.domain.CustomerStatus;
-import com.example.usermanager.service.CustomerService;
-import com.example.usermanager.service.CustomerServiceImpl;
+import com.example.usermanager.service.impl.CustomerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class ChangeCustomerStatusReceiver {
     }
 
     public void receiveMessage(String message) {
-        log.info("Massage with customerId = " + message + " was received. Start process for change status to Active.");
+        log.info("Message with customerId = " + message + " was received. Start process for change status to Active.");
         customerService.changeCustomerStatus(new BigInteger(message), CustomerStatus.Active);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.usermanager.controller;
 
 import com.example.usermanager.domain.CustomerStatus;
-import com.example.usermanager.service.CustomerServiceImpl;
+import com.example.usermanager.service.impl.CustomerServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -39,13 +39,13 @@ public class CustomerController {
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad request")
     })
-    @PostMapping(value = "/registration")
+    @PostMapping(value = "/signup")
     public void registration(@RequestParam String login, @RequestParam String password, @RequestParam String email){
-        customerServiceImpl.registration(login, password, email);
+        customerServiceImpl.signup(login, password, email);
     }
 
-    /*@GetMapping(value = "/login")
-    public String login() {
-        return customerService.login("", "");
-    }*/
+    @PostMapping(value = "/login")
+    public String login(@RequestParam String login, @RequestParam String password) {
+        return customerServiceImpl.login(login, password);
+    }
 }

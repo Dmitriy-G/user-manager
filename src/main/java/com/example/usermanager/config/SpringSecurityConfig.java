@@ -1,53 +1,44 @@
 package com.example.usermanager.config;
 
-import com.example.usermanager.security.provider.CustomerAuthenticationProvider;
-import com.example.usermanager.security.filter.JwtAuthenticationFilter;
-import com.example.usermanager.security.filter.JwtAuthorizationFilter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import com.example.usermanager.security.JwtAuthorizationFilter;
+import com.example.usermanager.service.CustomerDetailsService;
+import com.example.usermanager.service.CustomerService;
+import com.example.usermanager.service.impl.CustomerServiceImpl;
+import com.example.usermanager.service.JwtTokenService;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final CustomerAuthenticationProvider customerAuthenticationProvider;
+    private final CustomerService customerService;
+    private final JwtTokenService jwtTokenService;
+    private final CustomerDetailsService customerDetailsService;
 
-    public SpringSecurityConfig(CustomerAuthenticationProvider customerAuthenticationProvider) {
-        this.customerAuthenticationProvider = customerAuthenticationProvider;
+    public SpringSecurityConfig(CustomerServiceImpl customerService, JwtTokenService jwtTokenService, CustomerDetailsService customerDetailsService) {
+        this.customerService = customerService;
+        this.jwtTokenService = jwtTokenService;
+        this.customerDetailsService = customerDetailsService;
+    }
+
+    @Override
+    public void configure(WebSecurity web){
+        web.ignoring().antMatchers("/api/login", "/api/signup");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and()
-                .csrf().disable()
+        http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/registration").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/api/login", "/api/signup").permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager()))
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(customerAuthenticationProvider);
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        var source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-
-        return source;
+                .addFilterBefore(new JwtAuthorizationFilter(customerService, jwtTokenService, customerDetailsService), BasicAuthenticationFilter.class);
     }
 }
