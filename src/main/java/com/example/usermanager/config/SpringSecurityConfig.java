@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
@@ -28,17 +30,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web){
-        web.ignoring().antMatchers("/api/login", "/api/signup");
+        web.ignoring()
+                .antMatchers("/api/login")
+                .antMatchers("/api/signup")
+                .antMatchers("/error");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        /*http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/login", "/api/signup").permitAll()
-                .anyRequest()
-                .authenticated()
+        http
+                .csrf().disable()
+                .authorizeRequests().anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthorizationFilter(customerService, jwtTokenService, customerDetailsService), BasicAuthenticationFilter.class);*/
+                .addFilterBefore(new JwtAuthorizationFilter(customerService, jwtTokenService, customerDetailsService), UsernamePasswordAuthenticationFilter.class);
+
     }
 }

@@ -1,6 +1,5 @@
 package com.example.usermanager.service.impl;
 
-import com.example.usermanager.exceptions.TokenInvalidException;
 import com.example.usermanager.security.SecurityConstants;
 import com.example.usermanager.service.JwtTokenService;
 import io.jsonwebtoken.*;
@@ -56,6 +55,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 log.warn("Request to parse empty or null JWT : {} failed : {}", token, exception.getMessage());
             }
         }
-        throw new TokenInvalidException("Token = " + token + " is incorrect token");
+        return null;
     }
 }

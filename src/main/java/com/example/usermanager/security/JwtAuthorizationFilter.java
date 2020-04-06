@@ -14,6 +14,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.example.usermanager.security.SecurityConstants.*;
 
@@ -37,11 +38,13 @@ public class JwtAuthorizationFilter extends GenericFilterBean {
                             FilterChain filterChain) throws IOException, ServletException {
         var token = ((HttpServletRequest) request).getHeader(TOKEN_HEADER);
         var parsedToken = jwtTokenService.parseToken(token);
-        var login = parsedToken.getBody().getSubject();
-        var customer = customerService.findByLogin(login);
-        if (customerDetailsService.isValidCustomerStatus(customer)) {
-            filterChain.doFilter(request, response);
-            return;
+        if (Objects.nonNull(parsedToken)) {
+            var login = parsedToken.getBody().getSubject();
+            var customer = customerService.findByLogin(login);
+            if (customerDetailsService.isValidCustomerStatus(customer)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
         ((HttpServletResponse) response).setStatus(403);
 

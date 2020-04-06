@@ -23,6 +23,6 @@ public class ChangeCustomerStatusReceiver {
 
     public void receiveMessage(String message) {
         log.info("Message with customerId = " + message + " was received. Start process for change status to Active.");
-        customerService.changeCustomerStatus(new BigInteger(message), CustomerStatus.Active);
+        customerService.changeCustomerStatus(Long.parseLong(message), CustomerStatus.Active);
     }
 }

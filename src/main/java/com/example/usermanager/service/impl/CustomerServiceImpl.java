@@ -2,6 +2,7 @@ package com.example.usermanager.service.impl;
 
 import com.example.usermanager.domain.Customer;
 import com.example.usermanager.domain.CustomerStatus;
+import com.example.usermanager.exceptions.CustomerNotFoundException;
 import com.example.usermanager.externallayers.RabbitMQSender;
 import com.example.usermanager.repository.CustomerRepository;
 import com.example.usermanager.service.CustomerDetailsService;
@@ -11,9 +12,7 @@ import com.example.usermanager.service.PasswordEncoderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -42,28 +41,27 @@ public class CustomerServiceImpl implements CustomerService {
     public String login(String login, String password) {
         var customer = findByLogin(login);
         if (!customerDetailsService.isValidCustomerForAuthentication(customer, password)){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Customer with id = " + login + " is not found");
+            throw new CustomerNotFoundException("Customer with login = " + login + " is incorrect for authentication");
         }
         return jwtTokenService.generateToken(login);
     }
 
     @Override
-    public void signup(String login, String password, String email) {
+    public void signUp(String login, String password, String email) {
         var customer = customerRepository.save(new Customer(login, passwordEncoderService.encode(password), CustomerStatus.NonActive, email));
         log.info("Registration new customer " + login);
         rabbitMQSender.send(customer.getCustomerId());
     }
 
     @Override
-    public void changeCustomerStatus(BigInteger id, CustomerStatus newStatus) {
+    public void changeCustomerStatus(Long id, CustomerStatus newStatus) {
         var customer = customerRepository.findByCustomerId(id);
         if (Objects.isNull(customer)){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Customer with id = " + id + " is not found");
+            throw new CustomerNotFoundException("Customer with id = " + id + " is not found");
         }
         log.info("Change status for " + customer.getLogin() + " from " + customer.getStatus() + " to " + newStatus);
         customer.setStatus(newStatus);
+        customerRepository.save(customer);
     }
 
     @Override

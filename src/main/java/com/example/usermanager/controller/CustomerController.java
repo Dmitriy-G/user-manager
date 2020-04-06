@@ -31,7 +31,7 @@ public class CustomerController {
             @ApiResponse(code = 403, message = "Access denied")
     })
     @PostMapping(value = "/changeCustomerStatus")
-    public void changeCustomerStatus(@RequestParam BigInteger customerId, @RequestParam String newStatus) {
+    public void changeCustomerStatus(@RequestParam Long customerId, @RequestParam String newStatus) {
          customerServiceImpl.changeCustomerStatus(customerId, CustomerStatus.valueOf(newStatus));
     }
 
@@ -41,8 +41,8 @@ public class CustomerController {
             @ApiResponse(code = 400, message = "Bad request")
     })
     @PostMapping(value = "/signup")
-    public void registration(@RequestParam String login, @RequestParam String password, @RequestParam String email){
-        customerServiceImpl.signup(login, password, email);
+    public void signUp(@RequestParam String login, @RequestParam String password, @RequestParam String email){
+        customerServiceImpl.signUp(login, password, email);
     }
 
 

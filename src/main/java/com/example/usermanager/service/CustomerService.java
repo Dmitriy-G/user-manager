@@ -12,7 +12,7 @@ import java.math.BigInteger;
 @Validated
 public interface CustomerService {
     String login(@Login String login, @Password String password);
-    void signup(@Login String login, @Password String password, @Email String email);
-    void changeCustomerStatus(BigInteger customerId, CustomerStatus newStatus);
+    void signUp(@Login String login, @Password String password, @Email String email);
+    void changeCustomerStatus(Long customerId, CustomerStatus newStatus);
     Customer findByLogin(@Login String login);
 }
