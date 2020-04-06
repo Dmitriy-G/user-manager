@@ -5,20 +5,23 @@ import com.example.usermanager.validators.Password;
 import com.example.usermanager.validators.Email;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Document(collection = "customers")
 @Validated
 public class Customer {
 
+    @Transient
+    public static final String CUSTOMER_ID_SEQUENCE = "customer_sequence";
+
     @Id
-    private BigInteger customerId;
+    private Long customerId;
 
     @Indexed(unique=true)
     @NonNull
@@ -48,7 +51,11 @@ public class Customer {
         this.email = email;
     }
 
-    public BigInteger getCustomerId() {
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public Long getCustomerId() {
         return customerId;
     }
 
@@ -96,7 +103,6 @@ public class Customer {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(getCustomerId(), getLogin(), getEmail());
     }
 

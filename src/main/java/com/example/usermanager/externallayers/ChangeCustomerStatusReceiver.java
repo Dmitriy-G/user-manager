@@ -1,4 +1,4 @@
-package com.example.usermanager.mq;
+package com.example.usermanager.externallayers;
 
 import com.example.usermanager.domain.CustomerStatus;
 import com.example.usermanager.service.impl.CustomerServiceImpl;

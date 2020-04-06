@@ -5,7 +5,6 @@ import com.example.usermanager.domain.CustomerStatus;
 import com.example.usermanager.validators.Email;
 import com.example.usermanager.validators.Login;
 import com.example.usermanager.validators.Password;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigInteger;

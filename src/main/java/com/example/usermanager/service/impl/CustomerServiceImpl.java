@@ -2,7 +2,7 @@ package com.example.usermanager.service.impl;
 
 import com.example.usermanager.domain.Customer;
 import com.example.usermanager.domain.CustomerStatus;
-import com.example.usermanager.mq.RabbitMQSender;
+import com.example.usermanager.externallayers.RabbitMQSender;
 import com.example.usermanager.repository.CustomerRepository;
 import com.example.usermanager.service.CustomerDetailsService;
 import com.example.usermanager.service.CustomerService;

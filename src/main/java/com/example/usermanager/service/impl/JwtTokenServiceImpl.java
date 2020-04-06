@@ -29,7 +29,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .setIssuer(TOKEN_ISSUER)
                 .setAudience(TOKEN_AUDIENCE)
                 .setSubject(login)
-                .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_LIFETIME))
                 //.claim("rol", roles)
                 .compact();
 

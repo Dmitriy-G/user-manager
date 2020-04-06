@@ -27,6 +27,7 @@ public class CustomerController {
     @ApiOperation(value = "Change customer status")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad request"),
             @ApiResponse(code = 403, message = "Access denied")
     })
     @PostMapping(value = "/changeCustomerStatus")
@@ -44,6 +45,12 @@ public class CustomerController {
         customerServiceImpl.signup(login, password, email);
     }
 
+
+    @ApiOperation(value = "Login customer")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad request")
+    })
     @PostMapping(value = "/login")
     public String login(@RequestParam String login, @RequestParam String password) {
         return customerServiceImpl.login(login, password);

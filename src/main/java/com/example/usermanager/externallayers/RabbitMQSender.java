@@ -1,4 +1,4 @@
-package com.example.usermanager.mq;
+package com.example.usermanager.externallayers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class RabbitMQSender {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void send(BigInteger customerId) {
+    public void send(Long customerId) {
         rabbitTemplate.convertAndSend(exchange, routingKey, customerId);
         log.info("Change status to Active is planned for customer with id " + customerId);
     }
