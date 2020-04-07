@@ -7,8 +7,6 @@ import com.example.usermanager.validators.Login;
 import com.example.usermanager.validators.Password;
 import org.springframework.validation.annotation.Validated;
 
-import java.math.BigInteger;
-
 @Validated
 public interface CustomerService {
     String login(@Login String login, @Password String password);

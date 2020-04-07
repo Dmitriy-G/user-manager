@@ -2,39 +2,36 @@ package com.example.usermanager.service.impl;
 
 import com.example.usermanager.domain.Customer;
 import com.example.usermanager.domain.CustomerStatus;
+import com.example.usermanager.exceptions.CustomerDataAlreadyUsed;
 import com.example.usermanager.exceptions.CustomerNotFoundException;
-import com.example.usermanager.externallayers.RabbitMQSender;
 import com.example.usermanager.repository.CustomerRepository;
-import com.example.usermanager.service.CustomerDetailsService;
-import com.example.usermanager.service.CustomerService;
-import com.example.usermanager.service.JwtTokenService;
-import com.example.usermanager.service.PasswordEncoderService;
+import com.example.usermanager.service.*;
+import com.mongodb.MongoWriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.Objects;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final RabbitMQSender rabbitMQSender;
     private final CustomerDetailsService customerDetailsService;
     private final JwtTokenService jwtTokenService;
     private final PasswordEncoderService passwordEncoderService;
+    private final MqService mqService;
 
     private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, RabbitMQSender rabbitMQSender, CustomerDetailsService customerDetailsService, JwtTokenService jwtTokenService, PasswordEncoderService passwordEncoderService) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerDetailsService customerDetailsService, JwtTokenService jwtTokenService, PasswordEncoderService passwordEncoderService, MqService mqService) {
         this.customerRepository = customerRepository;
-        this.rabbitMQSender = rabbitMQSender;
         this.customerDetailsService = customerDetailsService;
         this.jwtTokenService = jwtTokenService;
         this.passwordEncoderService = passwordEncoderService;
+        this.mqService = mqService;
     }
 
     @Override
@@ -48,9 +45,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void signUp(String login, String password, String email) {
-        var customer = customerRepository.save(new Customer(login, passwordEncoderService.encode(password), CustomerStatus.NonActive, email));
-        log.info("Registration new customer " + login);
-        rabbitMQSender.send(customer.getCustomerId());
+        try {
+            var savedCustomer = customerRepository.save(new Customer(login, passwordEncoderService.encode(password), CustomerStatus.NonActive, email));
+            log.info("Registration new customer " + login);
+            mqService.activateCustomer(savedCustomer.getCustomerId());
+        } catch (MongoWriteException e) {
+            throw new CustomerDataAlreadyUsed("Login or email already used", e);
+        }
     }
 
     @Override

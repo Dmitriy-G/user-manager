@@ -1,4 +1,4 @@
-package com.example.usermanager.externallayers;
+package com.example.usermanager.config;
 
 import com.example.usermanager.domain.Customer;
 import com.example.usermanager.service.MongoDBService;
