@@ -9,8 +9,6 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
-
 @RestController
 @RequestMapping("/api")
 @Api("Customer manage")

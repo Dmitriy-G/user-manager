@@ -1,8 +1,5 @@
 package com.example.usermanager.domain;
 
-import com.example.usermanager.validators.Login;
-import com.example.usermanager.validators.Password;
-import com.example.usermanager.validators.Email;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
@@ -11,7 +8,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Email;
 import java.util.Objects;
+
+import static com.example.usermanager.validator.ValidatorConstants.*;
 
 @Document(collection = "customers")
 @Validated
@@ -21,15 +24,18 @@ public class Customer {
     public static final String CUSTOMER_ID_SEQUENCE = "customer_sequence";
 
     @Id
+    @Digits(integer=ID_MAX_DIGITS, fraction=ID_FRACTION)
     private Long customerId;
 
     @Indexed(unique=true)
     @NonNull
-    @Login
+    @Size(max=LOGIN_MAX_LENGTH)
+    @Pattern(regexp = LOGIN_REGEX)
     private String login;
 
     @NonNull
-    @Password
+    @Size(min=PASSWORD_MIN_LENGTH)
+    @Pattern(regexp = PASSWORD_REGEX)
     private String password;
 
     @NonNull
